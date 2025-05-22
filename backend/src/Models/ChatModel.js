@@ -1,10 +1,12 @@
-const db = require('../Config/db')
+const db = require('../Config/db');
 
 exports.saveConversation = (mensaje, respuesta) => {
     return new Promise((resolve, reject) => {
-        const sql = 'INSERT INTO conversaciones (mensaje_usuario, respuesta_bot) VALUES (?, ?)';
-        db.query(sql, [mensaje, respuesta], (error, resultado)=>{
-            if(error) {
+        const sql = 'INSERT INTO mensajes (content, sender) VALUES (?, ?), (?, ?)';
+        const values = [mensaje, 'user', respuesta, 'bot'];
+
+        db.query(sql, values, (error, resultado) => {
+            if (error) {
                 console.error('Error al guardar la conversación:', error);
                 return reject(error);
             }
@@ -15,17 +17,7 @@ exports.saveConversation = (mensaje, respuesta) => {
 
 exports.getAllConversations = () => {
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM Conversaciones ORDER BY fecha DESC';
-        db.query(sql, (error, resultado) => {
-            if(error) return reject (error);
-            resolve(resultado);
-        });
-    });
-};
-
-exports.resetAllHistorial = () => {
-    return new Promise((resolve, reject) => {
-        const sql = 'TRUNCATE TABLE conversaciones';
+        const sql = 'SELECT * FROM mensajes ORDER BY timestamps ASC';
         db.query(sql, (error, resultado) => {
             if (error) return reject(error);
             resolve(resultado);

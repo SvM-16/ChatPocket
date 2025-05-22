@@ -14,7 +14,6 @@ export const usePockiContext = () => {
 export const PockiProvider = ({ Children }) => {
     const [Historial, setHistorial] = useState([]);
     const [RespuestaIa, setRespuestaIa] = useState([]);
-    const [Cargando, setCargar] = useState(false);
 
 
 const HistorialIa = async () => {
@@ -38,26 +37,14 @@ const ObtenerRespuestas = async () => {
     }
 }
 
-const reseteoHistorial = async () => {
-    try {
-        await resetearHistorial();
-        setHistorial([]);
-        setRespuestaIa([]);
-        await ObtenerHistorialIa();
-    } catch (error) {
-        console.log("Error al resetar el Chat", error)
-    }
-}
 
 return (
     <ChatContext.Provider 
     value={{
         HistorialIa,
         ObtenerRespuestas,
-        reseteoHistorial,
         Historial, 
-        RespuestaIa, 
-        Cargando
+        RespuestaIa
     }}>
         {Children}
     </ChatContext.Provider>

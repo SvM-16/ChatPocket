@@ -1,24 +1,32 @@
 const apiService = require('../Services/ApiService');
 const chatModel = require('../Models/ChatModel');
 
-exports.sendMenssage = async (req, res) => {
+exports.sendMessage = async (req, res) => {
     const { mensaje } = req.body;
-    
-    if(!mensaje) {
+
+    if (!mensaje) {
         return res.status(400).json({
             error: 'Falta escribir en el campo "mensaje"'
         });
-    };
+    }
 
     try {
-        const respuesta_bot = await apiService.getOpenAIResponse(mensaje);
-        await chatModel.saveConversation(mensaje, respuesta_bot);
+        // Guardar el mensaje del usuario
+        await chatModel.saveConversation('usuario', mensaje);
 
-        res.json({respuesta: respuesta_bot})
+        // Obtener la respuesta del bot desde OpenAI
+        const respuestaBot = await apiService.getOpenAIResponse(mensaje);
+
+        // Guardar la respuesta del bot
+        await chatModel.saveConversation('bot', respuestaBot);
+
+        // Enviar la respuesta al frontend
+        res.json({ respuesta: respuestaBot });
+
     } catch (error) {
         console.error('Error al procesar el mensaje:', error.message);
-        res.status(500).json({error: 'Error al comunicarse con IA 🤖 '})
-    };
+        res.status(500).json({ error: 'Error al comunicarse con la IA 🤖' });
+    }
 };
 
 exports.getHistory = async (req, res) => {
@@ -27,16 +35,8 @@ exports.getHistory = async (req, res) => {
         res.json({ historial });
     } catch (error) {
         console.error('Error al obtener el historial:', error.message);
-        res.status(500).json({error: 'Error al obtener conversacion'})
+        res.status(500).json({ error: 'Error al obtener conversación' });
     }
 };
 
-exports.resetearHistorial = async (req, res) => {
-  try {
-    await chatModel.resetAllHistorial();
-    res.json({ mensaje: 'Historial reseteado correctamente' });
-  } catch (error) {
-    console.error('Error al resetear historial:', error);
-    res.status(500).json({ error: 'Error al resetear historial' });
-  }
-};
+
