@@ -1,15 +1,16 @@
 const express = require('express');
 const cors = require('cors');
-const chatroutes = require('');
+const chatRoutes = require('./src/Routes/RoustesChat');
 
 const app = express();
 const PORT = 3000;
 
-app.use(cors()),
+app.use(cors());
 app.use(express.json());
 
-app.use('/chat',  chatroutes)
+// Rutas
+app.use('/chat', chatRoutes);
 
 app.listen(PORT, () => {
-  console.log(`Servidor conectado en http://localhost: $(PORT)`);
+  console.log(`🚀 Conectado al servidor http://localhost:${PORT}`);
 });
