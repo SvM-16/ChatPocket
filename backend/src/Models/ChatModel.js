@@ -1,4 +1,4 @@
-const db = require('../Config.js/db')
+const db = require('../Config/db')
 
 exports.saveConversation = (mensaje, respuesta) => {
     return new Promise((resolve, reject) => {
@@ -13,11 +13,21 @@ exports.saveConversation = (mensaje, respuesta) => {
     });
 };
 
-exports.gerAllConversations = () => {
+exports.getAllConversations = () => {
     return new Promise((resolve, reject) => {
         const sql = 'SELECT * FROM Conversaciones ORDER BY fecha DESC';
         db.query(sql, (error, resultado) => {
             if(error) return reject (error);
+            resolve(resultado);
+        });
+    });
+};
+
+exports.resetAllHistorial = () => {
+    return new Promise((resolve, reject) => {
+        const sql = 'TRUNCATE TABLE conversaciones';
+        db.query(sql, (error, resultado) => {
+            if (error) return reject(error);
             resolve(resultado);
         });
     });

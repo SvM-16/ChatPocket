@@ -23,10 +23,20 @@ exports.sendMenssage = async (req, res) => {
 
 exports.getHistory = async (req, res) => {
     try {
-        const historial = await chatModel.gerAllConversations();
+        const historial = await chatModel.getAllConversations();
         res.json({ historial });
     } catch (error) {
         console.error('Error al obtener el historial:', error.message);
         res.status(500).json({error: 'Error al obtener conversacion'})
     }
+};
+
+exports.resetearHistorial = async (req, res) => {
+  try {
+    await chatModel.resetAllHistorial();
+    res.json({ mensaje: 'Historial reseteado correctamente' });
+  } catch (error) {
+    console.error('Error al resetear historial:', error);
+    res.status(500).json({ error: 'Error al resetear historial' });
+  }
 };

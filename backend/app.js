@@ -8,8 +8,7 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 
-// Rutas
-app.use('/chat', chatRoutes);
+app.use('/Chat', chatRoutes);
 
 app.listen(PORT, () => {
   console.log(`🚀 Conectado al servidor http://localhost:${PORT}`);
