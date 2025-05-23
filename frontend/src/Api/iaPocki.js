@@ -1,6 +1,7 @@
-import axios from '../Api/Axios'
+import axios from './axios'
 
-export const ObtenerRespuestaIa = () => axios.post("/Mensajes", {input})
+export const ObtenerRespuestaIa = (mensaje) => axios.post("/Mensajes", {mensaje} ) 
+
 
 export const ObtenerHistorialIa = () => axios.get("/Historial")
 

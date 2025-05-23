@@ -2,6 +2,9 @@ const apiService = require('../Services/ApiService');
 const chatModel = require('../Models/ChatModel');
 
 exports.sendMessage = async (req, res) => {
+
+    console.log('aca',req.body);
+
     const { mensaje } = req.body;
 
     if (!mensaje) {
@@ -11,16 +14,11 @@ exports.sendMessage = async (req, res) => {
     }
 
     try {
-        // Guardar el mensaje del usuario
         await chatModel.saveConversation('usuario', mensaje);
 
-        // Obtener la respuesta del bot desde OpenAI
         const respuestaBot = await apiService.getOpenAIResponse(mensaje);
 
-        // Guardar la respuesta del bot
         await chatModel.saveConversation('bot', respuestaBot);
-
-        // Enviar la respuesta al frontend
         res.json({ respuesta: respuestaBot });
 
     } catch (error) {
@@ -32,7 +30,7 @@ exports.sendMessage = async (req, res) => {
 exports.getHistory = async (req, res) => {
     try {
         const historial = await chatModel.getAllConversations();
-        res.json({ historial });
+        res.status(200).json(historial)
     } catch (error) {
         console.error('Error al obtener el historial:', error.message);
         res.status(500).json({ error: 'Error al obtener conversación' });
