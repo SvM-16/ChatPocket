@@ -226,7 +226,9 @@ json:
 ### 👨🏻‍💻 Autor 
 
 Nombre: Sebastian Vallejo 
+
 Rol: Desarrollador Fullstack
+
 Correo: svallejo2345@gmail.com
 
 
