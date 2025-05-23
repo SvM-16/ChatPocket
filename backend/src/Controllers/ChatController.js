@@ -2,23 +2,25 @@ const apiService = require('../Services/ApiService');
 const chatModel = require('../Models/ChatModel');
 
 exports.sendMessage = async (req, res) => {
+    console.log('aca', req.body);
 
-    console.log('aca',req.body);
+    let { mensaje } = req.body;
+    mensaje = mensaje?.trim().toLowerCase(); // Limpiamos entrada
 
-    const { mensaje } = req.body;
+    const mensajesNoValidos = ['bot', 'user', '', null];
 
-    if (!mensaje) {
+    if (!mensaje || mensajesNoValidos.includes(mensaje)) {
         return res.status(400).json({
-            error: 'Falta escribir en el campo "mensaje"'
+            error: 'El mensaje es inválido o está vacío.'
         });
     }
 
     try {
-        await chatModel.saveConversation('usuario', mensaje);
+        await chatModel.saveMessage('user', mensaje);
 
         const respuestaBot = await apiService.getOpenAIResponse(mensaje);
 
-        await chatModel.saveConversation('bot', respuestaBot);
+        await chatModel.saveMessage('bot', respuestaBot);
         res.json({ respuesta: respuestaBot });
 
     } catch (error) {
@@ -26,6 +28,7 @@ exports.sendMessage = async (req, res) => {
         res.status(500).json({ error: 'Error al comunicarse con la IA 🤖' });
     }
 };
+
 
 exports.getHistory = async (req, res) => {
     try {
